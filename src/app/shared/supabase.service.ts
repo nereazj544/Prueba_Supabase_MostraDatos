@@ -40,8 +40,8 @@ async updateUserProfile(id: string, profileData: any) {
             .eq('id', id);
 
         if (error) {
-            throw error;
             console.log('Error al actualizar el perfil:', error);
+            throw error;
         }
 
         console.log('Perfil actualizado:', data);
@@ -60,7 +60,7 @@ async getUserProfileById(id: string) {
     return await this.supabaseClient
         .from('profiles')
         .select('*')
-        .eq('username', id)
+        .eq('id', id)
         .single();
 }
 
