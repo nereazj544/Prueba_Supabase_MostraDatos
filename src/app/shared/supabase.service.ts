@@ -32,36 +32,43 @@ export class SupabaseService {
         return this.userActual;
     }
 
-async updateUserProfile(id: string, profileData: any) {
-    try{
-        const { data, error } = await this.supabaseClient
-            .from('profiles')
-            .update(profileData)
-            .eq('id', id);
+    async updateUserProfile(id: string, profileData: any) {
+        try {
+            const { data, error } = await this.supabaseClient
+                .from('profiles')
+                .update(profileData)
+                .eq('id', id);
 
-        if (error) {
-            console.log('Error al actualizar el perfil:', error);
+            if (error) {
+                console.log('Error al actualizar el perfil:', error);
+                throw error;
+            }
+
+            console.log('Perfil actualizado:', data);
+            return data;
+        } catch (error) {
+            console.error('Error al actualizar el perfil:', error);
             throw error;
         }
 
-        console.log('Perfil actualizado:', data);
-        return data;
-    } catch (error) {
-        console.error('Error al actualizar el perfil:', error);
-        throw error;
+
     }
 
 
-}
 
+    async getUserProfileById(id: string) {
+        return await this.supabaseClient
+            .from('profiles')
+            .select('*')
+            .eq('id', id)
+            .single();
+    }
 
+    async getCurrentUserId(): Promise<string | null> {
+        const { data, error } = await this.supabaseClient.auth.getUser();
+        if (error || !data.user) return null;
+        return data.user.id;
+    }
 
-async getUserProfileById(id: string) {
-    return await this.supabaseClient
-        .from('profiles')
-        .select('*')
-        .eq('id', id)
-        .single();
-}
 
 };

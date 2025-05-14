@@ -1,5 +1,6 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { ShowService } from '../../shared/show.service';
+import { SupabaseService } from '../../shared/supabase.service';
 
 @Component({
   selector: 'app-proveedor',
@@ -8,25 +9,32 @@ import { ShowService } from '../../shared/show.service';
   templateUrl: './proveedor.component.html',
   styleUrl: './proveedor.component.css'
 })
-export class ProveedorComponent {
-  private _showService = inject(ShowService);
+export class ProveedorComponent implements OnInit {
+  id = '';
+  username = '';
+  imagen_perfil = '';
+  banner = '';
+  presentacion = '';
+  genero = '';
+  location = '';
 
-  id: string = '';
-  username: string = '';
-  imagen_perfil: string = '';
-  banner: string = '';
-  presentacion: string = '';
-  genero: boolean = false;
-  location: string = '';
+  constructor(
+    private showService: ShowService,
+    private supabaseService: SupabaseService
+  ) {}
 
   async ngOnInit() {
-    const { data, error } = await this._showService.getUserProfileById(this.id);
-    if (error) {
-      console.error('Error fetching user profile:', error);
+    const userId = await this.supabaseService.getCurrentUserId();
+    if (!userId) {
+      console.error('No hay usuario autenticado');
       return;
     }
-    console.log('User profile data:', data);
-    this.id = data.id;
+    this.id = userId;
+    const { data, error } = await this.showService.getUserProfileById(this.id);
+    if (error) {
+      console.error('Error al obtener perfil:', error);
+      return;
+    }
     this.username = data.username;
     this.imagen_perfil = data.imagen_perfil;
     this.banner = data.banner;
@@ -34,6 +42,4 @@ export class ProveedorComponent {
     this.genero = data.genero;
     this.location = data.location;
   }
-
-
 }
