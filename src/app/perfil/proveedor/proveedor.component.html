@@ -40,9 +40,9 @@
 
                 <!--INFORMACION QUE ESCRIBA EL USUARIO -->
 
-                <p>Nombre de usuario: {{ 'No ha puesto nombre de usuario'}}</p>
-                <p>Ubicación: {{  'Desconocida' }}</p>
-                <p class="presentacion">{{  'Este proveedor aún no ha escrito una presentación.' }}
+                <p>Nombre de usuario: {{ username || 'No ha puesto nombre de usuario'}}</p>
+                <p>Ubicación: {{ location || 'Desconocida' }}</p>
+                <p class="presentacion">Presentacion: {{  presentacion || 'Este proveedor aún no ha escrito una presentación.' }}
                 </p>
 
             </div>
